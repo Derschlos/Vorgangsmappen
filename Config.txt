@@ -1,7 +1,7 @@
 {"Username": "David Leon Schmidt",
                 "baseColor" : "lightsalmon",
-                "MapEditPageColor" : "lightsalmon",
-                "MapEditPageDimensions" : "475x450",
+                "ProcessFolderEditPageColor" : "lightsalmon",
+                "ProcessFolderEditPageDimensions" : "475x450",
                 "page2Color": "lightsalmon",
                 "page2Dimensions" : "430x200"
                 }

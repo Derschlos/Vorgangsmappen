@@ -11,9 +11,10 @@ import json
 from tkinter import messagebox
 import Models
 from tkinterdnd2 import DND_FILES, TkinterDnD
-from MapEditPageData import MapEditPage
+from ProcessFolderEditPageData import ProcessFolderEditPage
 from Page2Data import Page2
 import re
+import sqlite3
 from PyInstaller.utils.hooks import collect_data_files, eval_statement
 datas = collect_data_files('tkinterdnd2')
 
@@ -23,18 +24,25 @@ def setupDB():
         return
     con = sqlite3.connect(db)
     cur = con.cursor()
-    Table1Create = """CREATE TABLE "TableName1" (
-	"id"	INTEGER NOT NULL UNIQUE,
-	"title"	TEXT NOT NULL,
-	PRIMARY KEY("id" AUTOINCREMENT)
+    Table1Create = """CREATE TABLE "ProcessFolder" (
+	"idNum" INTEGER NOT NULL UNIQUE,
+	"sourceNr" TEXT NOT NULL,
+	"title" TEXT NOT NULL,
+	"year" TEXT NOT NULL,
+	"dokDat" TEXT NOT NULL,
+	"user" TEXT,
+	"status" TEXT,
+	"folder" TEXT,
+	"register" TEXT,
+	PRIMARY KEY("idNum" AUTOINCREMENT)
         )"""
-    Table2Create= """CREATE TABLE "TableName2" (
-	"id"	INTEGER NOT NULL UNIQUE,
-	"text"	TEXT NOT NULL,
-	PRIMARY KEY("id" AUTOINCREMENT)
-        )"""
-    cur.execute(Tabel1Create)
-    cur.execute(Tabel2Create)
+##    Table2Create= """CREATE TABLE "TableName2" (
+##	"id"	INTEGER NOT NULL UNIQUE,
+##	"text"	TEXT NOT NULL,
+##	PRIMARY KEY("id" AUTOINCREMENT)
+##        )"""
+    cur.execute(Table1Create)
+##    cur.execute(Tabel2Create)
     return
 
 class basedesk:
@@ -51,11 +59,12 @@ class basedesk:
         self.lastFrame =''
 
         self.frames = {}
-        for f in (MapEditPage,Page2,):
+        for f in (ProcessFolderEditPage,Page2,):
             frame = f(self.baseContainer, self)
             self.frames[frame.pageName] = frame
             frame.grid(row = 0, column = 0, sticky ="nsew")
-        self.showFrame('MapEditPage')
+        self.showFrame('ProcessFolderEditPage')
+        self.setLastFrame('ProcessFolderEditPage')
 
     def showFrame(self,frameName):
         frame= self.frames[frameName]
@@ -89,12 +98,12 @@ class basedesk:
 
 
 if __name__ == '__main__':
-##    setupDB()
+    setupDB()
     configFile= 'Config.txt'
     configString = '''{"Username": "David Leon Schmidt",
                 "baseColor" : "lightsalmon",
-                "MapEditPageColor" : "lightsalmon",
-                "MapEditPageDimensions" : "475x450",
+                "ProcessFolderEditPageColor" : "lightsalmon",
+                "ProcessFolderEditPageDimensions" : "475x450",
                 "page2Color": "lightsalmon",
                 "page2Dimensions" : "430x200"
                 }'''
