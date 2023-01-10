@@ -3,11 +3,11 @@ from tkinter import messagebox
 import Models
 
 
-class Page2(tk.Frame):
+class CreateProcessPage(tk.Frame):
     def __init__(self,parent, controller):
 ##        tk.Frame.__init__(self, parent)
         super().__init__(parent)
-        self.pageName = 'page2'
+        self.pageName = 'CreateProcessPage'
         self.controller = controller
 ##        self.bg = self.controller.configString['EditPageColor']
 

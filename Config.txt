@@ -2,7 +2,7 @@
                 "DataBase" : "Database.db",
                 "baseColor" : "lightsalmon",
                 "ProcessFolderEditPageColor" : "lightsalmon",
-                "ProcessFolderEditPageDimensions" : "800x800",
-                "page2Color": "lightsalmon",
-                "page2Dimensions" : "430x200"
+                "ProcessFolderEditPageDimensions" : "675x350",
+                "CreateProcessPageColor": "lightsalmon",
+                "CreateProcessPageDimensions" : "430x200"
                 }

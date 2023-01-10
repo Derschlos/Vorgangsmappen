@@ -11,8 +11,8 @@ import json
 from tkinter import messagebox
 import Models
 from tkinterdnd2 import DND_FILES, TkinterDnD
-from ProcessFolderEditPageData import ProcessFolderEditPage
-from Page2Data import Page2
+from ProcessFolderEditPage import ProcessFolderEditPage
+from CreateProcessPage import CreateProcessPage
 import re
 import sqlite3
 from contextlib import closing
@@ -60,7 +60,7 @@ class basedesk:
 
         self.frames = {}
         self.processFolders = self.initReadDB()
-        for f in (ProcessFolderEditPage,Page2,):
+        for f in (ProcessFolderEditPage,CreateProcessPage,):
             frame = f(self.baseContainer, self)
             self.frames[frame.pageName] = frame
             frame.grid(row = 0, column = 0, sticky ="nsew")
@@ -120,9 +120,9 @@ if __name__ == '__main__':
                 "DataBase" : "Database.db",
                 "baseColor" : "lightsalmon",
                 "ProcessFolderEditPageColor" : "lightsalmon",
-                "ProcessFolderEditPageDimensions" : "475x450",
-                "page2Color": "lightsalmon",
-                "page2Dimensions" : "430x200"
+                "ProcessFolderEditPageDimensions" : "675x350",
+                "CreateProcessPageColor": "lightsalmon",
+                "CreateProcessPageDimensions" : "430x200"
                 }'''
     
     if os.path.isfile(configFile):
