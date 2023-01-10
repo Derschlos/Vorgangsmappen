@@ -9,5 +9,5 @@
 *.[Pp][Dd][Ff]*
 # tif
 *.[Tt][Ii][Ff]*
-__pycache__
+*__pycache__*
 *.[Dd][Bb]*

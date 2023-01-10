@@ -15,13 +15,14 @@ from ProcessFolderEditPageData import ProcessFolderEditPage
 from Page2Data import Page2
 import re
 import sqlite3
+from contextlib import closing
 from PyInstaller.utils.hooks import collect_data_files, eval_statement
 datas = collect_data_files('tkinterdnd2')
 
-def setupDB():
-    db = 'Database.db'
+def setupDB(database):
+    db = database
     if os.path.isfile(db):
-        return
+        return 
     con = sqlite3.connect(db)
     cur = con.cursor()
     Table1Create = """CREATE TABLE "ProcessFolder" (
@@ -49,7 +50,6 @@ class basedesk:
     def __init__(self,root, configVars):
         self.root = root
         self.configVars  = configVars
-##        self.root.config()
         self.root.title('Base page')
         self.root.geometry('370x200')
         self.baseContainer = tk.Frame(self.root)
@@ -59,6 +59,7 @@ class basedesk:
         self.lastFrame =''
 
         self.frames = {}
+        self.processFolders = self.initReadDB()
         for f in (ProcessFolderEditPage,Page2,):
             frame = f(self.baseContainer, self)
             self.frames[frame.pageName] = frame
@@ -90,6 +91,21 @@ class basedesk:
             else:
                 self.savedChanges = True        
         self.showFrame(self.lastFrame)
+    def initReadDB(self):
+        db = self.configVars["DataBase"]
+        with closing(sqlite3.connect(db)) as con:
+            cur = con.cursor()
+            self.processFolderFields = list(Models.ProcessFolder().__dict__)
+            pFolders = {}
+            existingData = cur.execute('SELECT * FROM ProcessFolder')
+            for data in existingData:
+                dataDict= dict(zip(self.processFolderFields, data))
+                newPFModel = Models.ProcessFolder()
+                newPFModel.fillFromDict(dataDict)
+                pFolders[dataDict["idNum"]] = newPFModel
+            return pFolders
+            
+        
 
 
 
@@ -98,15 +114,17 @@ class basedesk:
 
 
 if __name__ == '__main__':
-    setupDB()
+    
     configFile= 'Config.txt'
     configString = '''{"Username": "David Leon Schmidt",
+                "DataBase" : "Database.db",
                 "baseColor" : "lightsalmon",
                 "ProcessFolderEditPageColor" : "lightsalmon",
                 "ProcessFolderEditPageDimensions" : "475x450",
                 "page2Color": "lightsalmon",
                 "page2Dimensions" : "430x200"
                 }'''
+    
     if os.path.isfile(configFile):
         with open(configFile, 'r') as f:
             configString = f.read()
@@ -114,6 +132,7 @@ if __name__ == '__main__':
         with open(configFile, 'w') as f:
             f.write(configString)
     configString= json.loads(configString)
+    setupDB(configString["DataBase"])
     root= TkinterDnD.Tk()
     basedesk(root, configString)
     root.mainloop()

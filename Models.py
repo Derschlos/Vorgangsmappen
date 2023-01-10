@@ -8,32 +8,6 @@ class Mdt:
         self.mdtNr = mdtNr
         self.vorgaMap = vorgaMaps
         self.addInfo = addInfo
-##    def saveToDb(self, connection):
-##        cursor = connection.cursor()
-##        if self.idNum == '':
-##             cursor.execute(
-##                "Insert into table1(idNum,title) VALUES (:idNum,:title)",
-##                {'idNum':str(self.idNum),
-##                 'title':self.title
-##                    })
-##            idNum = cursor.execute('SELECT MAX(id) from Kontakte').fetchone()[0]
-##            self.idNum = idNum
-##            connection.commit()
-##            return idNum
-##         else:
-##            idExist = cursor.execute('SELECT * FROM table1 WHERE idNum=:idNum',{'idNum':str(self.idNum)})
-##            if idExist:
-##                cursor.execute(
-##                    "UPDATE table1 SET title = :title WHERE idNum = :idNum",
-##                    {'title':self.title,
-##                     'idNum':str(self.idNum)
-##                        })
-##                connection.commit()
-##    def delete(self, connection):
-##        cursor = connection.cursor()
-##        if self.idNum:
-##            cursor.execute("DELETE FROM table1 WHERE idNum= :idNum",{"idNum": str(self.idNum)})
-##        connection.commit()
 
 class ProcessFolder:
     def __init__(self):
@@ -58,7 +32,7 @@ class ProcessFolder:
         self.register = register
     def fillFromDict(self,dataDict):
         for field in dataDict:
-            if field == "" or field == null:
+            if field == "" or field == None:
                 # only update fields with values
                 continue
             self.__dict__[field] = dataDict[field]
@@ -90,13 +64,14 @@ class ProcessFolder:
                      'idNum':self.idNum}
         if self.idNum == '':
             del fieldNamesAndDoublePointDict['idNum']
+##            print()
             cursor.execute(
-                f"""Insert into ProcessFolder(",".join(
-                                            {fieldNamesAndDoublePointDict.keys()})
-                VALUES(",".join(
-                            {fieldNamesAndDoublePointDict.values()}))""",
+                f"""Insert into ProcessFolder({",".join(
+                                            fieldNamesAndDoublePointDict.keys())})
+                VALUES({",".join(
+                            fieldNamesAndDoublePointDict.values())})""",
                 storageDict)
-            idNum = cursor.execute('SELECT MAX(id) from ProcessFolder').fetchone()[0]
+            idNum = cursor.execute('SELECT MAX(idNum) from ProcessFolder').fetchone()[0]
             self.idNum = idNum
             connection.commit()
             return idNum
@@ -124,7 +99,7 @@ class Placeholders:
     # these are the placeholders that can be added to titles in MapEdit
     def __init__(self):
         self.mdtNr = "Mdt. Nr."
-        self.addInfo = "Additional Info"
+        self.addInfo = "Zusätzliche Info"
     def fill(mdt, voga):
         self.mdtNr = mdt.mdtNr
         self.addInfo = mdt.addInfo
