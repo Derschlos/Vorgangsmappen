@@ -13,7 +13,7 @@ class ProcessFolderEditPage(tk.Frame):
         self.bg = self.controller.configVars['ProcessFolderEditPageColor']
         self.placeholders = Models.Placeholders()
         self.selectedProcessFolder = Models.ProcessFolder()
-        self.folderTitleToId = {}
+        self.pFolderTitleToId = {}
         self.savedChanges = True
         
         # Frame For Selection Combo
@@ -31,7 +31,7 @@ class ProcessFolderEditPage(tk.Frame):
                                    lambda:self.controller.
                                    returnToPrev(self.savedChanges,
                                                 self.pageName))
-        self.newFolderBut = tk.Button(self.selectionFrame, text = "Neue Vorgangsmappe", command =
+        self.newPFolderBut = tk.Button(self.selectionFrame, text = "Neue Vorgangsmappe", command =
                                  self.newFolder)
         
         # Frame for main Entry-Fields
@@ -72,7 +72,7 @@ class ProcessFolderEditPage(tk.Frame):
         self.selectionLab.grid(row =0, column = 0)
         self.selectionCombo.grid(row =0, column = 1)
         self.returnBut.grid(row =1, column = 0, pady = 2)
-        self.newFolderBut.grid(row =1, column = 1, pady = 2)
+        self.newPFolderBut.grid(row =1, column = 1, pady = 2)
             # Entry Frame
         for i in range(len(self.entryFieldsNames)):
             self.entryLabels[list(self.entryLabels)[i]].grid(
@@ -106,9 +106,9 @@ class ProcessFolderEditPage(tk.Frame):
         # Updates the Selectioncombo
         self.folderTitleToId = {}
         for folder in self.controller.processFolders.values():
-            self.folderTitleToId[
+            self.pFolderTitleToId[
                 f'{folder.idNum}: {folder.title}'] = folder.idNum
-        self.selectionCombo['values'] = list(self.folderTitleToId)
+        self.selectionCombo['values'] = list(self.pFolderTitleToId)
 
     def insertLBoxVals(self):
         for key in self.placeholderLBoxChoices:
@@ -119,7 +119,7 @@ class ProcessFolderEditPage(tk.Frame):
         # Fills the Enty-fields with the data of the selected Folder
 ##        if type(eventOrNum) == "<class 'tkinter.Event'>":
         self.savedChanges = False
-        idOfSelected = self.folderTitleToId[self.selectionCombo.get()]
+        idOfSelected = self.pFolderTitleToId[self.selectionCombo.get()]
         self.selectedProcessFolder = self.controller.processFolders[idOfSelected]
         for field in self.entryFields:
             self.entryFieldsVars[field].set(self.selectedProcessFolder.__dict__[field])

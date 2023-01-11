@@ -83,7 +83,7 @@ class ProcessFolder:
                     f"""UPDATE ProcessFolder SET
                         {",".join([f'{name} = {doublePoint}'
                                     for name,doublePoint in
-                                    fieldNamesAndDoublePointDict.keys()])}
+                                    fieldNamesAndDoublePointDict.items()])}
                         WHERE idNum = :idNum""",
                     storageDict)
                 connection.commit()
