@@ -55,9 +55,11 @@ class ProcessFolderEditPage(tk.Frame):
                                           text ='Platzhalter im Titel einfügen:',
                                           bg = self.bg)
         self.placeholderLBoxVar = tk.StringVar(value=list(self.placeholderLBoxChoices))
-        self.placeholderLBox = tk.Listbox(self.placeholderFrame, listvariable = self.placeholderLBoxChoices, width = 20, height = 5)
+        self.placeholderLBox = tk.Listbox(self.placeholderFrame,
+                                          listvariable = self.placeholderLBoxVar,
+                                          width = 20, height = 5)
         self.placeholderLBox.bind('<Double-Button-1>', self.insertPlaceholder)
-        self.insertLBoxVals()
+##        self.insertLBoxVals()
 
 
         # Additional Buttons
@@ -110,10 +112,10 @@ class ProcessFolderEditPage(tk.Frame):
                 f'{folder.idNum}: {folder.title}'] = folder.idNum
         self.selectionCombo['values'] = list(self.pFolderTitleToId)
 
-    def insertLBoxVals(self):
-        for key in self.placeholderLBoxChoices:
-            self.placeholderLBox.insert('end', key)
-##            self.placeholderLBox.itemconfig('end', background = "red")
+##    def insertLBoxVals(self):
+##        for key in self.placeholderLBoxChoices:
+##            self.placeholderLBox.insert('end', key)
+####            self.placeholderLBox.itemconfig('end', background = "red")
 
     def displayFolder(self, event):
         # Fills the Enty-fields with the data of the selected Folder
