@@ -27,8 +27,10 @@ class CreateProcessPage(tk.Frame):
                                    command = self.addPFToLbox)
 
         # Process Folder Listbox Frame
+        # this need to be renamed to something more descriptive
+        # since these are the PF to be added to the DATEV system
         self.pFListboxFrame = tk.Frame(self,bg=self.bg)
-        self.pFListboxChoices = 
+        
         self.pFListboxVar = tk.StringVar()
         self.pFListbox = tk.Listbox(self.pFListboxFrame,
                                     width = 20, height = 5)

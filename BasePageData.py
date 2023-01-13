@@ -58,14 +58,14 @@ class basedesk:
         self.baseContainer.grid_columnconfigure(0, weight = 1)
         self.lastFrame =''
         firstFrame = "CreateProcessPage"
-        print(type(ProcessFolderEditPage))
+        
         self.frames = {}
         self.processFolders = self.initReadDB()
         for f in (ProcessFolderEditPage,CreateProcessPage,):
             frame = f(self.baseContainer, self)
             self.frames[frame.pageName] = frame
             frame.grid(row = 0, column = 0, sticky ="nsew")
-        print(self.frames)
+        
         self.showFrame(firstFrame)
         self.setLastFrame(firstFrame)
 
