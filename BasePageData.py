@@ -57,10 +57,14 @@ class basedesk:
         self.baseContainer.grid_rowconfigure(0, weight = 1)
         self.baseContainer.grid_columnconfigure(0, weight = 1)
         self.lastFrame =''
+        self.processFolders = self.initReadDB()
+        self.placeholders = Models.Placeholders()
+        self.placeholderChoices = {value:key for key,value in self.
+                                       placeholders.__dict__.items()}
+        
         firstFrame = "CreateProcessPage"
         
         self.frames = {}
-        self.processFolders = self.initReadDB()
         for f in (ProcessFolderEditPage,CreateProcessPage,):
             frame = f(self.baseContainer, self)
             self.frames[frame.pageName] = frame

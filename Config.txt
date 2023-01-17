@@ -4,5 +4,5 @@
                 "ProcessFolderEditPageColor" : "lightsalmon",
                 "ProcessFolderEditPageDimensions" : "675x350",
                 "CreateProcessPageColor": "lightsalmon",
-                "CreateProcessPageDimensions" : "430x200"
+                "CreateProcessPageDimensions" : "430x800"
                 }

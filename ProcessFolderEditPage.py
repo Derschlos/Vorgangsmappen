@@ -11,7 +11,6 @@ class ProcessFolderEditPage(tk.Frame):
         self.pageName = 'ProcessFolderEditPage'
         self.controller = controller
         self.bg = self.controller.configVars['ProcessFolderEditPageColor']
-        self.placeholders = Models.Placeholders()
         self.selectedProcessFolder = Models.ProcessFolder()
         self.pFolderTitleToId = {}
         self.savedChanges = True
@@ -25,7 +24,6 @@ class ProcessFolderEditPage(tk.Frame):
         self.selectionCombo = ttk.Combobox(self.selectionFrame,
                                               textvariable =self.selectionComboVar,
                                               width = 49)
-        self.updateSelectionBox()
         self.selectionCombo.bind('<<ComboboxSelected>>', self.displayFolder)
         self.returnBut = tk.Button(self.selectionFrame, text = "Zurück", command =
                                    lambda:self.controller.
@@ -50,11 +48,12 @@ class ProcessFolderEditPage(tk.Frame):
 
         # Listbox for Placeholders
         self.placeholderFrame=tk.Frame(self, bg=self.bg)
-        self.placeholderLBoxChoices = {value:key for key,value in self.placeholders.__dict__.items()}
         self.placeholderLab = tk.Label(self.placeholderFrame,
                                           text ='Platzhalter im Titel einfügen:',
                                           bg = self.bg)
-        self.placeholderLBoxVar = tk.StringVar(value=list(self.placeholderLBoxChoices))
+        self.placeholderLBoxVar = tk.StringVar(value=list(self.
+                                                          controller.
+                                                          placeholderChoices))
         self.placeholderLBox = tk.Listbox(self.placeholderFrame,
                                           listvariable = self.placeholderLBoxVar,
                                           width = 20, height = 5)
@@ -96,6 +95,7 @@ class ProcessFolderEditPage(tk.Frame):
         
 
     def onRaise(self):
+        self.updateSelectionBox()
         self.controller.root.title('This is ProcessFolderEditPage')
         self.controller.root.geometry(self.controller.configVars['ProcessFolderEditPageDimensions'])
         self.config(bg = self.controller.configVars['ProcessFolderEditPageColor'])
@@ -113,7 +113,7 @@ class ProcessFolderEditPage(tk.Frame):
         self.selectionCombo['values'] = list(self.pFolderTitleToId)
 
 ##    def insertLBoxVals(self):
-##        for key in self.placeholderLBoxChoices:
+##        for key in self.controller.placeholderLBoxChoices:
 ##            self.placeholderLBox.insert('end', key)
 ####            self.placeholderLBox.itemconfig('end', background = "red")
 
@@ -130,7 +130,7 @@ class ProcessFolderEditPage(tk.Frame):
         self.savedChanges = False
         selectedIndex = self.placeholderLBox.curselection()
         selection = self.placeholderLBox.get(selectedIndex)
-        selection = '{' + str(self.placeholderLBoxChoices[selection])+'}'
+        selection = '{' + str(self.controller.placeholderChoices[selection])+'}'
         titleEntry = self.entryFieldsVars['title']
         titleEntry.set(titleEntry.get()+str(selection))
         
