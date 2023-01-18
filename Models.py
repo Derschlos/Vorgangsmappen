@@ -2,12 +2,10 @@ class Mdt:
     # Not Mapped in DB
     def __init__(self):
         self.mdtNr = 0
-        self.vorgaMaps = []
-        self.addInfo = ""
-    def fill(self,mdtNr,vorgaMaps, addInfo):
+        self.processes = {}
+    def fill(self,mdtNr,processes):
         self.mdtNr = mdtNr
-        self.vorgaMap = vorgaMaps
-        self.addInfo = addInfo
+        self.processes = processes
 
 class ProcessFolder:
     def __init__(self):

@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 import Models
+import re
 
 
 class CreateProcessPage(tk.Frame):
@@ -12,9 +13,9 @@ class CreateProcessPage(tk.Frame):
         self.bg = self.controller.configVars['CreateProcessPageColor']
         self.pFolderTitleToId = {}
         self.addInfoVars = {}
-        self.addInfoLabels = {}
-        self.addInfoEntrys = {}
+        self.mandates = {}
         self.addInfoFields = {}
+        self.currentMdt = Models.Mdt()
         
         
         self.editPageBut = tk.Button(self,
@@ -40,31 +41,43 @@ class CreateProcessPage(tk.Frame):
         self.pFListboxLab = tk.Label(self.pFListboxFrame,
                                      text = "Ausgewählte Vorgangsmappe",
                                      bg = self.bg)
-        self.pFListboxVar = tk.StringVar()
+        self.pFListboxVar = tk.StringVar(value = list(self.currentMdt.processes))
         self.pFListbox = tk.Listbox(self.pFListboxFrame,
                                     listvariable = self.pFListboxVar,
                                     width = 20, height = 5)
+        self.pFListbox.bind("<<ListboxSelect>>",
+                            lambda e: self.showPFAddInfo(
+                                self.pFListbox.curselection()))
         
         
         # Additional Info Entry
         self.addInfoFrame = tk.Frame(self,bg=self.bg)
         for field in self.controller.placeholderChoices.values():
             self.addInfoVars[field] = tk.StringVar()
-
-        
-        self.addInfoVar = tk.StringVar()
        
         # Mdt Listbox
         self.mdtListboxFrame = tk.Frame(self,bg=self.bg)
         self.mdtListboxLab = tk.Label(self.mdtListboxFrame,
                                      text = "Ausgewählte Mandanten",
                                      bg = self.bg)
-        self.mdtListboxVar = tk.StringVar()
+        self.mdtListboxVar = tk.StringVar(value = list(self.mandates))
         self.mdtListbox = tk.Listbox(self.mdtListboxFrame,
                                      listvariable = self.mdtListboxVar,
-                                     width = 20, height = 5)
+                                     width = 20, height = 5,
+                                     exportselection = False)
+        self.addMdtEntVar = tk.StringVar()
+        validateMdtWrapper = (self.controller.root.register(self.validateMdtEntry),
+                           '%P')
+        self.addMdtEnt = tk.Entry (self.mdtListboxFrame,
+                                   textvariable = self.addMdtEntVar,
+                                   validate = 'key',
+                                   validatecommand = validateMdtWrapper)
         self.addMdtBut = tk.Button(self.mdtListboxFrame,
-                                   text = "Mandanten hinzufügen",)
+                                   text = "Mandanten hinzufügen",
+                                   command = self.addMdt)
+        self.deleteMdtBut = tk.Button(self.mdtListboxFrame,
+                                   text = "Mandanten löschen",
+                                   command = self.deleteMdt)
 
         
         
@@ -82,6 +95,9 @@ class CreateProcessPage(tk.Frame):
         self.mdtListboxFrame.pack()#
         self.mdtListboxLab.pack()
         self.mdtListbox.pack()
+        self.addMdtEnt.pack()
+        self.addMdtBut.pack()
+        self.deleteMdtBut.pack()
         
         self.addInfoFrame.pack()#
         # Fields are added in the createAddInfoFields method
@@ -134,4 +150,42 @@ class CreateProcessPage(tk.Frame):
                 self.addInfoFields[field] = [label,entry]
             
     def addPFToLbox(self):
-        pass
+        if len(self.mandates) < 1:
+            return
+        mdtSelection = self.mdtListbox.curselection()
+        mdt = self.mdtListbox.get(mdtSelection)
+        self.currentMdt = self.mandates[mdt]
+        print(self.currentMdt.mdtNr)
+        
+    def showPFAddInfo(self, selection):
+        print(selection)
+##        if len(self.mandates) < 1:
+##            return
+        
+        
+    def validateMdtEntry(self, newval):
+        return re.match('^[0-9]*$', newval) is not None and len(newval) <= 5
+    
+    def addMdt(self):
+        mdt = self.addMdtEnt.get()
+        if mdt == "" or len(mdt)< 5:
+            return
+        newMdt = Models.Mdt()
+        newMdt.mdtNr = mdt
+        self.mandates[mdt] = newMdt
+        self.mdtListboxVar.set(value = list(self.mandates))
+##        self.mdtListbox['exportselection'] = True
+        self.mdtListbox.selection_clear(0,tk.END)
+        self.mdtListbox.selection_set(len(self.mandates)-1)
+##        self.mdtListbox['exportselection'] = False
+
+    def deleteMdt(self):
+        selectedIndex = self.mdtListbox.curselection()
+        if len(selectedIndex) < 1:
+            return
+        selectedMdt = self.mdtListbox.get(selectedIndex)
+        del self.mandates[selectedMdt]
+        self.mdtListboxVar.set(value = list(self.mandates))
+
+
+        
